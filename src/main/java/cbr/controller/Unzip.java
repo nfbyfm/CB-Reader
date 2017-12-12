@@ -12,6 +12,8 @@ import org.apache.commons.io.IOUtils;
 
 public class Unzip {
 
+	private String[] images;
+	
 	public Unzip(String zipfilename, String targetfolder)
 	{
 		
@@ -32,6 +34,7 @@ public class Unzip {
 
 			    zis = new ZipInputStream(new FileInputStream(zipfilename));
 			    ZipEntry entry;
+int index = 0;
 
 			    while ((entry = zis.getNextEntry()) != null) {
 
@@ -56,6 +59,8 @@ public class Unzip {
 			            // Create file on disk...
 			            if (!entryFile.exists()) {
 			                entryFile.createNewFile();
+			                images[index]=entryFile.getAbsolutePath();
+			                index +=1;
 			            }
 
 			            // and rewrite data from stream
@@ -115,6 +120,11 @@ public class Unzip {
 		}
 		
 			
+	}
+	
+	public String[] get_image_paths()
+	{
+		return images;
 	}
 
 	

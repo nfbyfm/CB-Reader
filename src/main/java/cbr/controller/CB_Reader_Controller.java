@@ -49,31 +49,13 @@ public class CB_Reader_Controller {
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			String filename = ficho.getSelectedFile().getAbsolutePath();
+			System.out.println(filename);
 			if(filename.toLowerCase().contains(".cbz")==false){
 				filename += ".cbz";
 			}
 			File fs = new File(filename);
 			if(fs.exists()){
-				//unzip
-				//Unzip unzi = new Unzip(filename, null);
 				
-				File tempfolder = null;
-				try {
-					tempfolder = createTempDirectory();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(tempfolder !=null)
-				{
-					Unzip unzi = new Unzip(filename, tempfolder.getAbsolutePath());
-					try {
-						Desktop.getDesktop().open(tempfolder);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
 				
 			}
 			else{
@@ -84,19 +66,5 @@ public class CB_Reader_Controller {
 	
 	
 	
-	public static File createTempDirectory() throws IOException
-	{
-	    final File temp;
-	    temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
-
-	    if(!(temp.delete()))
-	    	throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-	    
-
-	    if(!(temp.mkdir()))
-	    	throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-	    
-
-	    return (temp);
-	}
+	
 }
