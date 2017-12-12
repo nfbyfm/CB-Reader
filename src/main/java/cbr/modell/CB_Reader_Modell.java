@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JList;
+import javax.swing.ListModel;
+
 import org.apache.commons.io.FileUtils;
 
 public class CB_Reader_Modell {
@@ -27,17 +30,21 @@ public class CB_Reader_Modell {
 			
 		
 		tempfolder = null;
+		
+		
 		try {
 			tempfolder = createTempDirectory();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		if(tempfolder !=null)
 		{
 			//check wheather it's a cbz or cbr-File
 			if(filename.toLowerCase().endsWith(".cbz"))
 			{
+				//unzip
 				Unzip unzi = new Unzip(filename, tempfolder.getAbsolutePath());
 				images = new ArrayList<String>();
 				images= unzi.get_image_paths();
@@ -48,7 +55,9 @@ public class CB_Reader_Modell {
 			if(filename.toLowerCase().endsWith(".cbr"))
 			{
 				//unrar
-				
+				Unrar unra = new Unrar(filename, tempfolder.getAbsolutePath());
+				images = new ArrayList<String>();
+				images= unra.get_image_paths();
 				return;
 			}
 			
@@ -123,13 +132,9 @@ public class CB_Reader_Modell {
 		
 		if(tempfolder.exists())
 		{
-			//try to delete it
+			//try to delete the temp-folder
 			FileUtils.deleteDirectory(tempfolder);
-			/*
-			 * if(!(tempfolder.delete()))
-			 * 		throw new IOException("Could not delete temp file: " + tempfolder.getAbsolutePath());
-			 */
-		    	
+			System.out.println(tempfolder + " has been deleted.");
 			
 		}
 			
@@ -149,6 +154,11 @@ public class CB_Reader_Modell {
 	    
 
 	    return (temp);
+	}
+
+	public List<String> get_image_list() {
+		// TODO Auto-generated method stub
+		return images;
 	}
 	
 }

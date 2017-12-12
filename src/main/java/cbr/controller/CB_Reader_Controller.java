@@ -2,11 +2,14 @@ package cbr.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 import cbr.modell.CB_Reader_Modell;
 import cbr.view.CB_Reader_View;
@@ -80,7 +83,7 @@ public class CB_Reader_Controller {
 		//show FileChooser
 		JFileChooser ficho = new JFileChooser();
 		ficho.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		FileFilter imageFilter =new FileNameExtensionFilter("cbz-file", "cbz");
+		FileFilter imageFilter =new FileNameExtensionFilter("cb*-file", "cbz", "cbr");
 		ficho.setFileFilter(imageFilter);
 		ficho.setAcceptAllFileFilterUsed(false);
 		ficho.setDialogTitle("open cbz-file");
@@ -106,6 +109,29 @@ public class CB_Reader_Controller {
 		if(mainmodell !=null)
 			mainview.show_image(mainmodell.get_previous_image());
 
+	}
+/*
+	public DefaultListModel<String> gui_getModel() {
+		// TODO Auto-generated method stub
+		
+		DefaultListModel<String> listModel = new DefaultListModel<>();
+		
+		if(mainmodell !=null)
+		{
+			List <String> img = mainmodell.get_image_list();
+				
+			for (int i = 0; i < img.size(); i++) {
+				listModel.addElement(img.get(i));
+			}
+		}
+		
+		return listModel;
+	}
+*/
+	public void gui_selected_image_changed(int selectedIndex) {
+		// TODO Auto-generated method stub
+		if(mainmodell !=null)
+			mainview.show_image(mainmodell.get_image_at(selectedIndex));
 	}
 }
 

@@ -1,29 +1,56 @@
 package cbr.view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.MalformedInputException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.BevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 
 import cbr.controller.CB_Reader_Controller;
+
 
 
 public class CB_Reader_View extends JFrame{
@@ -32,47 +59,49 @@ public class CB_Reader_View extends JFrame{
 	 * MainWindow of the Comic-Book-Reader
 	 */
 	private static final long serialVersionUID = -6804062852707834161L;
+
+	
+
+	/*
+	 * GUI-Elements
+	 */
+	private JSplitPane splitpane;
+	private JLabel img_label;
+	
+	
+	/*
+	 * Private Variables
+	 */
 	private CB_Reader_Controller controller;
+	private String current_picture_path;
+	private String window_base_titlestring = "Comic Book-Reader - ";
+	
+	private JList<String> image_list;
 
 	public CB_Reader_View(CB_Reader_Controller maincontroller)
 	{
 		super("Comic Book-Reader");
 
+		if(maincontroller != null)
+			this.controller=maincontroller;
+		
+		current_picture_path=null;
+		
+		//Listeners
 		this.addKeyListener(new KeyListener() {
 
 			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void keyTyped(KeyEvent e) {}
 
 			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void keyReleased(KeyEvent e) {}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
 				int keyCode = e.getKeyCode();
 				switch( keyCode ) { 
-				case KeyEvent.VK_UP:
-					// handle up 
-					System.out.println("pane up");
-					break;
-				case KeyEvent.VK_DOWN:
-					// handle down 
-					System.out.println("pane down");
-					break;
-				case KeyEvent.VK_LEFT:
-					// handle left
-					System.out.println("pane left");
-					break;
-				case KeyEvent.VK_RIGHT :
-					// handle right
-					System.out.println("pane right");
-					break;
+
 				case KeyEvent.VK_PLUS:
 					System.out.println("Zoom in");
 					break;
@@ -80,11 +109,9 @@ public class CB_Reader_View extends JFrame{
 					System.out.println("Zoom out");
 					break;
 				case KeyEvent.VK_ENTER:
-					System.out.println("next picture");
 					controller.gui_next_picture();
 					break;
 				case KeyEvent.VK_BACK_SPACE:
-					System.out.println("previous picture");
 					controller.gui_previous_picture();
 					break;
 				}
@@ -92,25 +119,32 @@ public class CB_Reader_View extends JFrame{
 			}
 		});
 
-		if(maincontroller != null)
-			this.controller=maincontroller;
+		this.addComponentListener(new ComponentListener() {
+			
+			@Override
+			public void componentShown(ComponentEvent e) {}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {update_image();	}
+			
+			@Override
+			public void componentMoved(ComponentEvent e) {}
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {}
+		});
+		
+		
+		
+		
 
 		//set Look & Feel
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());} 
+		catch (ClassNotFoundException e) {e.printStackTrace();} 
+		catch (InstantiationException e) {e.printStackTrace();} 
+		catch (IllegalAccessException e) {e.printStackTrace();} 
+		catch (UnsupportedLookAndFeelException e) {e.printStackTrace();}
 
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setSize(600, 400);
@@ -230,27 +264,90 @@ public class CB_Reader_View extends JFrame{
 
 	private void create_mainpanel()
 	{
+		/*
+		//create splitpanel for list of images and Image-Panel
+		splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		splitpane.setLeftComponent(create_list_view());
+		splitpane.setRightComponent(create_imagepanel());
+		splitpane.setDividerLocation(170);
+				
+		this.add(splitpane);
+		*/
+		
+		this.add(create_imagepanel());
+	}
 
+
+	//Panel mit Listview erstellen
+	private JPanel create_list_view()
+	{
+		JPanel mainpanel2 = new JPanel();
+		mainpanel2.setLayout(new BorderLayout());
+		mainpanel2.setBackground(Color.WHITE);
+		mainpanel2.setOpaque(true);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setOpaque(true);
+		scrollPane.setBackground(Color.WHITE);
+
+		/*
+		image_list = new JList<String>(controller.gui_getModel());
+		
+		scrollPane.setViewportView(image_list);		
+		ListSelectionListener listSelectionListener = new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				boolean adjust = e.getValueIsAdjusting();
+				if (!adjust) {
+					controller.gui_selected_image_changed(image_list.getSelectedIndex());
+				}
+			}
+		};
+		image_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		image_list.addListSelectionListener(listSelectionListener);
+		image_list.setBorder(new BevelBorder(BevelBorder.LOWERED));
+		 
+*/
+		mainpanel2.add(scrollPane,BorderLayout.CENTER);
+		return mainpanel2;
+	}
+
+	private JPanel create_imagepanel()
+	{
+		JPanel retpanel = new JPanel();
+		retpanel.setLayout(new BorderLayout());
+		retpanel.setBackground(Color.WHITE);
+		retpanel.setOpaque(true);
+		
+		
+		
+		img_label = new JLabel(readImageIcon("cbr/images/cbr_text.png"));
+		img_label.setBackground(Color.WHITE);
+		img_label.setOpaque(true);
+		
+		JScrollPane pictureScrollPane = new JScrollPane(img_label);//picture);
+		pictureScrollPane.setBackground(Color.WHITE);
+		
+
+		retpanel.add(pictureScrollPane);
+		return retpanel;
 	}
 
 
 
-
-
-
+	//function for the controller
 	public void show_image(String imagepath)
 	{
 		if(imagepath != null)
 		{
 			File fi = new File(imagepath);
 			if(fi.exists()==false)
-			{
 				System.out.println("Viewer: Image-File "+ imagepath + " does not exists.");
-			}
 			else
 			{
 				//display image
-				System.out.println("Viewer: Display Image with path: " + imagepath);
+				current_picture_path=imagepath;
+				update_image();
+				//System.out.println("Viewer: Display Image with path: " + imagepath);
 			}
 
 		}
@@ -258,15 +355,47 @@ public class CB_Reader_View extends JFrame{
 			System.out.println("Viewer: Imagepath is empty.");
 	}
 
+	//private function -> gets called from controller (via show image) or windowresize
+	private void update_image()
+	{
+		if(current_picture_path!=null)
+		{
+			if(current_picture_path !="" )
+			{
+				ImageIcon ico = new ImageIcon(current_picture_path);
+				
+				//scale image
+				int hoehe=this.getHeight()-50;
+				
+				Image img = ico.getImage();
+
+				int newwidth = img.getWidth(null);
+				newwidth = newwidth*hoehe/img.getHeight(null);
+
+				Image newimg = img.getScaledInstance(newwidth, hoehe, java.awt.Image.SCALE_SMOOTH);
+				
+				img_label.setIcon(new ImageIcon(newimg));
+				this.setTitle(window_base_titlestring + current_picture_path.substring(current_picture_path.lastIndexOf("\\")+1));
+				
+			}
+			else
+				System.out.println("Viewer loading Image: filename is empty.");
+		}
+		else
+			System.out.println("Viewer loading Image: no image file selected.");
+		
+	}
+	
+
 	//get picture from ressources/images-package
 	static ImageIcon readImageIcon(String filename) 
 	{
-		String fileNamePath=  filename;
-		URL url= CB_Reader_View.class.getClassLoader().getResource(fileNamePath);
+		URL url= CB_Reader_View.class.getClassLoader().getResource(filename);
 		if(url!= null) {
 			ImageIcon icon= new ImageIcon(url);
 			return icon;
-		} else{ System.err.println("Couldn't find file: "+ fileNamePath); }
+		} else{ System.err.println("Couldn't find file: "+ filename); }
+
 		return null;
 	}
 }

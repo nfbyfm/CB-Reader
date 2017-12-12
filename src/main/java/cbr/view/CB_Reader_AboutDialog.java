@@ -56,10 +56,13 @@ public class CB_Reader_AboutDialog extends JDialog{
 		Box b = Box.createVerticalBox();
 		b.setBackground(backgroundcolor);
 		b.add(Box.createGlue());
-		b.add(new JLabel("simple Comic Book-Reader,"));
-		b.add(new JLabel("written in Java"));
+		b.add(new JLabel("simple Comic Book-Reader"));
+		b.add(new JLabel("written in Java by nfbyfm"));
 		b.add(new JLabel(" "));
-		b.add(new JLabel("nfbyfm, december 2017"));
+		b.add(new JLabel("Use: "));
+		b.add(new JLabel(" press Enter for next page"));
+		b.add(new JLabel(" press Backspace for previous page"));
+		b.add(new JLabel(" "));
 		b.add(Box.createGlue());
 		getContentPane().add(b,"Center");
 
@@ -76,6 +79,6 @@ public class CB_Reader_AboutDialog extends JDialog{
 			}
 		});
 		
-		setSize(300, 190);
+		setSize(350, 200);
 	}
 }

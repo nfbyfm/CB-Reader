@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
@@ -11,10 +13,14 @@ import com.github.junrar.rarfile.FileHeader;
 
 public class Unrar {
 
+	private List<String> images;
+	
 	public Unrar(String archive, String destination) {
 		if (archive == null || destination == null) {
 			throw new RuntimeException("archive and destination must me set");
 		}
+		images = new ArrayList<String>();
+		
 		File arch = new File(archive);
 		if (!arch.exists()) {
 			throw new RuntimeException("the archive does not exit: " + archive);
@@ -26,11 +32,18 @@ public class Unrar {
 							+ destination);
 		}
 		extractArchive(arch, dest);
+		System.out.println("cbr has been extracted.");
+		/*
+		System.out.println("Unrared image-paths:");
+		for (int i = 0; i < images.size(); i++) {
+			System.out.println(images.get(i));
+		}
+		*/
 	}
 
 
 
-	public static void extractArchive(File archive, File destination) {
+	private void extractArchive(File archive, File destination) {
 		Archive arch = null;
 		try {
 			arch = new Archive(archive);
@@ -54,7 +67,7 @@ public class Unrar {
 					System.out.println("file is encrypted cannot extract: "	+ fh.getFileNameString());
 					continue;
 				}
-				System.out.println("extracting: " + fh.getFileNameString());
+				//System.out.println("extracting: " + fh.getFileNameString());
 				try {
 					if (fh.isDirectory()) {
 						createDirectory(fh, destination);
@@ -63,6 +76,7 @@ public class Unrar {
 						OutputStream stream = new FileOutputStream(f);
 						arch.extractFile(fh, stream);
 						stream.close();
+						images.add(f.getAbsolutePath());
 					}
 				} catch (IOException e) {
 					System.err.println("error extracting the file" + e.getMessage());
@@ -142,5 +156,12 @@ public class Unrar {
 			new File(destination, path).mkdir();
 		}
 
+	}
+
+
+
+	public List<String> get_image_paths() {
+		// return list of images
+		return images;
 	}
 }
