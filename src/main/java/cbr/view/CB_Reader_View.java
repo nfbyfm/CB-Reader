@@ -157,7 +157,7 @@ public class CB_Reader_View extends JFrame{
 				if(Desktop.isDesktopSupported())
 				{
 					try {
-						Desktop.getDesktop().browse(new URI("https://github.com/nfbyfm/CBR-Reader/wiki"));
+						Desktop.getDesktop().browse(new URI("https://github.com/nfbyfm/CB-Reader/wiki"));
 					} catch (IOException | URISyntaxException e1) {
 						e1.printStackTrace();
 						JOptionPane.showMessageDialog(null, "Couldn't open wiki-Page.");
