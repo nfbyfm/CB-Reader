@@ -3,7 +3,7 @@ CB-Reader is a simple Comic Book-Reader for cbr and cbz-files, written in java. 
 
 ## Usage
 
-### Version 0.5
+### [Version 0.5] (https://github.com/nfbyfm/CB-Reader/releases)
 Open either a cbr- or cbz-file and wait until the first page shows up (this might take a while, depending on the file-size).
 You can get to the next page by pushing Enter on your keyboard. Push Backspace to get to the previous image. 
 
