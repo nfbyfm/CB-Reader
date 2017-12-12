@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JList;
-import javax.swing.ListModel;
 
 import org.apache.commons.io.FileUtils;
 

@@ -3,8 +3,7 @@ package cbr.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,24 +12,19 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.MalformedInputException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -38,15 +32,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JSplitPane;
+
 import javax.swing.KeyStroke;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.BevelBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+
 
 
 import cbr.controller.CB_Reader_Controller;
@@ -65,7 +56,7 @@ public class CB_Reader_View extends JFrame{
 	/*
 	 * GUI-Elements
 	 */
-	private JSplitPane splitpane;
+	//private JSplitPane splitpane;
 	private JLabel img_label;
 	
 	
@@ -76,7 +67,7 @@ public class CB_Reader_View extends JFrame{
 	private String current_picture_path;
 	private String window_base_titlestring = "Comic Book-Reader - ";
 	
-	private JList<String> image_list;
+	//private JList<String> image_list;
 
 	public CB_Reader_View(CB_Reader_Controller maincontroller)
 	{
@@ -279,7 +270,7 @@ public class CB_Reader_View extends JFrame{
 
 
 	//Panel mit Listview erstellen
-	private JPanel create_list_view()
+	/*private JPanel create_list_view()
 	{
 		JPanel mainpanel2 = new JPanel();
 		mainpanel2.setLayout(new BorderLayout());
@@ -306,11 +297,11 @@ public class CB_Reader_View extends JFrame{
 		image_list.addListSelectionListener(listSelectionListener);
 		image_list.setBorder(new BevelBorder(BevelBorder.LOWERED));
 		 
-*/
+
 		mainpanel2.add(scrollPane,BorderLayout.CENTER);
 		return mainpanel2;
 	}
-
+*/
 	private JPanel create_imagepanel()
 	{
 		JPanel retpanel = new JPanel();
