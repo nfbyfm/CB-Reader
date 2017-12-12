@@ -1,25 +1,30 @@
 package cbr.modell;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-import cbr.controller.Unzip;
+import org.apache.commons.io.FileUtils;
 
 public class CB_Reader_Modell {
 
-	private String[] images;
+	private List<String> images;
 	private int index;
 	private File tempfolder;
 	
-	public CB_Reader_Modell(String filename)
+	public CB_Reader_Modell(String filename) throws Exception
 	{
 		//unzip / unrar file into temp-folder
 		//fill array
 		//set index to 1
 		//unzip
 		//Unzip unzi = new Unzip(filename, null);
+		
+		if(!(filename.toLowerCase().endsWith(".cbz") || filename.toLowerCase().endsWith(".cbr")))
+			throw new Exception("CB-Reader: Model-Module: filename doesn't have cbr or cbz-suffix.");
+		
+			
 		
 		tempfolder = null;
 		try {
@@ -30,14 +35,55 @@ public class CB_Reader_Modell {
 		}
 		if(tempfolder !=null)
 		{
-			Unzip unzi = new Unzip(filename, tempfolder.getAbsolutePath());
+			//check wheather it's a cbz or cbr-File
+			if(filename.toLowerCase().endsWith(".cbz"))
+			{
+				Unzip unzi = new Unzip(filename, tempfolder.getAbsolutePath());
+				images = new ArrayList<String>();
+				images= unzi.get_image_paths();
+				return;
+			}
+			
+			
+			if(filename.toLowerCase().endsWith(".cbr"))
+			{
+				//unrar
+				
+				return;
+			}
+			
+			/*
 			try {
 				Desktop.getDesktop().open(tempfolder);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			*/
 		}
+	}
+	
+	public String get_image_at(int image_index)
+	{
+		if(!images.isEmpty())
+		{
+			if(image_index >=0 && image_index < images.size())
+			{
+				return images.get(image_index);
+			}
+			else
+			{
+				System.out.println("Modell: Image-Index (" + image_index + ") is out of range. Array-Size: " + images.size());
+				return null;
+			}
+				
+		}
+		else
+		{
+			System.out.println("Modell: images-Array is empty.");
+			return null;
+		}
+			
 	}
 	
 	public String get_next_image()
@@ -49,9 +95,9 @@ public class CB_Reader_Modell {
 		else
 		{
 			index +=1;
-			if(index>= images.length)
+			if(index>= images.size())
 				index=0;
-			return images[index];
+			return images.get(index);
 		}
 	}
 	
@@ -65,21 +111,25 @@ public class CB_Reader_Modell {
 		{
 			index -=1;
 			if(index <0)
-				index=images.length-1;
-			return images[index];
+				index=images.size()-1;
+			return images.get(index);
 		}
 	}
 	
 	public void delete_files() throws IOException
 	{
-		Arrays.fill(images, null);
+		images.clear();
 		index = -1;
 		
 		if(tempfolder.exists())
 		{
 			//try to delete it
-			if(!(tempfolder.delete()))
-		    	throw new IOException("Could not delete temp file: " + tempfolder.getAbsolutePath());
+			FileUtils.deleteDirectory(tempfolder);
+			/*
+			 * if(!(tempfolder.delete()))
+			 * 		throw new IOException("Could not delete temp file: " + tempfolder.getAbsolutePath());
+			 */
+		    	
 			
 		}
 			

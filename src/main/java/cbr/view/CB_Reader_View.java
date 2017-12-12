@@ -5,6 +5,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,12 +33,64 @@ public class CB_Reader_View extends JFrame{
 	 */
 	private static final long serialVersionUID = -6804062852707834161L;
 	private CB_Reader_Controller controller;
-	
+
 	public CB_Reader_View(CB_Reader_Controller maincontroller)
 	{
 		super("Comic Book-Reader");
 
+		this.addKeyListener(new KeyListener() {
 
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				int keyCode = e.getKeyCode();
+				switch( keyCode ) { 
+				case KeyEvent.VK_UP:
+					// handle up 
+					System.out.println("pane up");
+					break;
+				case KeyEvent.VK_DOWN:
+					// handle down 
+					System.out.println("pane down");
+					break;
+				case KeyEvent.VK_LEFT:
+					// handle left
+					System.out.println("pane left");
+					break;
+				case KeyEvent.VK_RIGHT :
+					// handle right
+					System.out.println("pane right");
+					break;
+				case KeyEvent.VK_PLUS:
+					System.out.println("Zoom in");
+					break;
+				case KeyEvent.VK_MINUS:
+					System.out.println("Zoom out");
+					break;
+				case KeyEvent.VK_ENTER:
+					System.out.println("next picture");
+					controller.gui_next_picture();
+					break;
+				case KeyEvent.VK_BACK_SPACE:
+					System.out.println("previous picture");
+					controller.gui_previous_picture();
+					break;
+				}
+
+			}
+		});
 
 		if(maincontroller != null)
 			this.controller=maincontroller;
@@ -75,7 +129,7 @@ public class CB_Reader_View extends JFrame{
 			}
 		});
 
-		
+
 		create_Menu();
 		create_mainpanel();
 
@@ -105,7 +159,7 @@ public class CB_Reader_View extends JFrame{
 			}
 		});
 
-			
+
 
 		menu.add(new JSeparator());
 
@@ -123,7 +177,7 @@ public class CB_Reader_View extends JFrame{
 			}
 		});
 
-		
+
 
 		//Extras
 		JMenu extras = new JMenu("Extras");
@@ -135,7 +189,7 @@ public class CB_Reader_View extends JFrame{
 
 		//show simple about-dialog
 		info.addActionListener(new ActionListener() {
-			
+
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -143,7 +197,7 @@ public class CB_Reader_View extends JFrame{
 				f.show();
 			}
 		});
-		
+
 		extras.add(new JSeparator());
 		JMenuItem help = new JMenuItem("Help");
 		help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
@@ -151,7 +205,7 @@ public class CB_Reader_View extends JFrame{
 		extras.add(help);
 
 		help.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(Desktop.isDesktopSupported())
@@ -167,19 +221,43 @@ public class CB_Reader_View extends JFrame{
 					JOptionPane.showMessageDialog(null, "Couldn't open wiki-Page.");
 			}
 		});
-		
+
 
 		// set menubar for Mainwindow
 		this.setJMenuBar(bar);
 	}
-	
-	
+
+
 	private void create_mainpanel()
 	{
-		
+
 	}
-	
-	
+
+
+
+
+
+
+	public void show_image(String imagepath)
+	{
+		if(imagepath != null)
+		{
+			File fi = new File(imagepath);
+			if(fi.exists()==false)
+			{
+				System.out.println("Viewer: Image-File "+ imagepath + " does not exists.");
+			}
+			else
+			{
+				//display image
+				System.out.println("Viewer: Display Image with path: " + imagepath);
+			}
+
+		}
+		else
+			System.out.println("Viewer: Imagepath is empty.");
+	}
+
 	//get picture from ressources/images-package
 	static ImageIcon readImageIcon(String filename) 
 	{
