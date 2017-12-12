@@ -1,5 +1,5 @@
 # CBR - A simple Comic Book-Reader
-CB-Reader is a simple Comic Book-Reader for cbr and cbz-files, written in java. - Work in progress. [Releases](https://github.com/nfbyfm/CB-Reader/releases)
+CB-Reader is a simple Comic Book-Reader for cbr and cbz-files, written in java. - Work in progress. [Link to the releases.](https://github.com/nfbyfm/CB-Reader/releases)
 
 ## Usage
 
