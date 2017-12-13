@@ -2,7 +2,9 @@ package cbr.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -17,7 +19,8 @@ public class CB_Reader_Controller {
 
 	private CB_Reader_View mainview;
 	private CB_Reader_Modell mainmodell;
-
+	private DefaultListModel<String> listModel;
+	
 	public CB_Reader_Controller() {
 		mainview = new CB_Reader_View(this);
 		mainmodell = null;
@@ -34,8 +37,10 @@ public class CB_Reader_Controller {
 		if(fs.exists()){
 			if( mainmodell != null)
 			{
+							
 				try {
 					mainmodell.delete_files();
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -43,7 +48,9 @@ public class CB_Reader_Controller {
 			}
 
 			try {
+				
 				mainmodell = new CB_Reader_Modell(filename);
+				fill_listModel();
 				mainview.show_image(mainmodell.get_image_at(0));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -90,8 +97,7 @@ public class CB_Reader_Controller {
 		int returnVal = ficho.showOpenDialog(null);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			open_file(ficho.getSelectedFile().getAbsolutePath());			
-								
+			open_file(ficho.getSelectedFile().getAbsolutePath());							
 		}
 	}
 
@@ -108,24 +114,49 @@ public class CB_Reader_Controller {
 			mainview.show_image(mainmodell.get_previous_image());
 
 	}
-/*
+
 	public DefaultListModel<String> gui_getModel() {
 		// TODO Auto-generated method stub
 		
-		DefaultListModel<String> listModel = new DefaultListModel<>();
+		listModel = new DefaultListModel<>();
 		
 		if(mainmodell !=null)
 		{
-			List <String> img = mainmodell.get_image_list();
-				
-			for (int i = 0; i < img.size(); i++) {
-				listModel.addElement(img.get(i));
-			}
+			fill_listModel();
 		}
 		
 		return listModel;
 	}
-*/
+	
+	
+	private void fill_listModel()
+	{
+		if(mainmodell != null && listModel != null)
+		{
+			listModel.clear();
+			
+			
+			List <String> img = mainmodell.get_image_list();
+			
+			if(img != null)
+			{
+				if(img.isEmpty()==false)
+				{
+					for (int i = 0; i < img.size(); i++) {
+						String fina = img.get(i);
+						fina = fina.substring(fina.lastIndexOf("\\")+1);
+						listModel.addElement(fina);
+					}
+				}
+				else
+					System.out.println("Controller: Imagelist from Model is empty.");
+			}
+			else
+				System.out.println("Controller: Imagelist from Model is null.");
+		}
+		System.out.println("ListModel and/or MainModel equal null.");
+	}
+
 	public void gui_selected_image_changed(int selectedIndex) {
 		// TODO Auto-generated method stub
 		if(mainmodell !=null)
