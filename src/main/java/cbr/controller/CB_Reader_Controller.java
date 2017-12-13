@@ -73,10 +73,15 @@ public class CB_Reader_Controller {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			System.out.println("closing program");
+			System.exit(0);
+			
+		}
+		else {
+			System.out.println("closing program");
 			System.exit(0);
 		}
-		else
-			System.exit(0);
+			
 		/*int dialogResult = JOptionPane.showConfirmDialog (null, "Really close program?","Close program",JOptionPane.YES_NO_OPTION);
 		if(dialogResult == JOptionPane.YES_OPTION){
 			System.exit(0);
@@ -91,7 +96,7 @@ public class CB_Reader_Controller {
 		FileFilter imageFilter =new FileNameExtensionFilter("cb*-file", "cbz", "cbr");
 		ficho.setFileFilter(imageFilter);
 		ficho.setAcceptAllFileFilterUsed(false);
-		ficho.setDialogTitle("open cbz-file");
+		ficho.setDialogTitle("Open Comic-Book-file");
 		ficho.setCurrentDirectory(new File(System.getProperty("user.home") ));
 
 		int returnVal = ficho.showOpenDialog(null);
@@ -154,7 +159,7 @@ public class CB_Reader_Controller {
 			else
 				System.out.println("Controller: Imagelist from Model is null.");
 		}
-		System.out.println("ListModel and/or MainModel equal null.");
+		//System.out.println("ListModel and/or MainModel equal null.");
 	}
 
 	public void gui_selected_image_changed(int selectedIndex) {

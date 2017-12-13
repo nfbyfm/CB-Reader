@@ -85,7 +85,7 @@ public class CB_Reader_View extends JFrame{
 		};
 
 		//Timer for resizing
-		recalculateTimer= new Timer(1000, resize_listener);
+		recalculateTimer= new Timer(500, resize_listener);
 		recalculateTimer.setRepeats(false);
 
 
@@ -389,11 +389,11 @@ public class CB_Reader_View extends JFrame{
 				this.setTitle(window_base_titlestring + current_picture_path.substring(current_picture_path.lastIndexOf("\\")+1));
 
 			}
-			else
-				System.out.println("Viewer loading Image: filename is empty.");
+			//else
+				//System.out.println("Viewer loading Image: filename is empty.");
 		}
-		else
-			System.out.println("Viewer loading Image: no image file selected.");
+		//else
+			//System.out.println("Viewer loading Image: no image file selected.");
 
 	}
 

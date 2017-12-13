@@ -132,7 +132,7 @@ public class CB_Reader_Modell {
 		{
 			//try to delete the temp-folder
 			FileUtils.deleteDirectory(tempfolder);
-			System.out.println(tempfolder + " has been deleted.");
+			//System.out.println(tempfolder + " has been deleted.");
 			
 		}
 			
