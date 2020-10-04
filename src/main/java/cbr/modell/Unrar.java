@@ -15,7 +15,7 @@ public class Unrar {
 
 	private List<String> images;
 	
-	public Unrar(String archive, String destination) {
+	public Unrar(String archive, String destination) throws Exception {
 		if (archive == null || destination == null) {
 			throw new RuntimeException("archive and destination must me set");
 		}
@@ -54,7 +54,7 @@ public class Unrar {
 		}
 		if (arch != null) {
 			if (arch.isEncrypted()) {
-				System.out.println("archive is encrypted cannot extreact");
+				System.out.println("archive is encrypted cannot extract");
 				return;
 			}
 			FileHeader fh = null;

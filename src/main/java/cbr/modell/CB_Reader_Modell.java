@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FileUtils;
 
@@ -52,11 +53,25 @@ public class CB_Reader_Modell {
 			
 			if(filename.toLowerCase().endsWith(".cbr"))
 			{
+				Unrar unra = null;
 				//unrar
-				Unrar unra = new Unrar(filename, tempfolder.getAbsolutePath());
-				images = new ArrayList<String>();
-				images= unra.get_image_paths();
-				return;
+				try {
+					unra = new Unrar(filename, tempfolder.getAbsolutePath());
+					
+				} catch (Exception e) {
+					// show error message
+					JOptionPane.showMessageDialog(null, "Could not open cbr-file. Maybe file is encrypted or currupt?","Error loading cbr-file",JOptionPane.WARNING_MESSAGE);
+				}
+				
+				if(unra.equals(null)== false)
+				{
+					images = new ArrayList<String>();
+					images= unra.get_image_paths();
+					return;
+				}
+				
+				
+				
 			}
 			
 			/*
